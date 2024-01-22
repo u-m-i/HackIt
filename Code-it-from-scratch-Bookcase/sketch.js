@@ -1,4 +1,4 @@
-class book 
+class Book 
 {
     /** Properties **/
 
@@ -69,12 +69,18 @@ function shelfWeight(index)
 
 // Additional code
 
-function fecthRandomData()
+function fecthRandomData(bookcase)
 {
-    let key = "YOUR_GOOGLE_CLOUD_KEY";
+    let key = "AIzaSyDMRcwB5mMSBsKzHxNU90BgVrimUtD_09U";
 
     let url = `https://www.googleapis.com/books/v1/volumes?q=random&key=${key}`;
-    
+
+
+    if("YOUR_API_KEY" === key)
+    {
+        console.warn("The API key is not assigned, the information can not be fetch");
+        return;
+    }
 
     fetch(url)
         .then( response => response.json())
@@ -88,8 +94,14 @@ function fecthRandomData()
                     return;
                 }
 
-                console.table(data.items);
 
+                for(let i = 0; i < data.items.length; ++i)
+
+                {
+                    let book = new Book(data.items[i].volumeInfo.title, 'CO');
+
+                    bookcase.push(book);
+                }
             }
     );
 
@@ -100,7 +112,6 @@ function fecthRandomData()
 let bookcase = [];
 
 fecthRandomData();
-
 
 function setup()
 {
