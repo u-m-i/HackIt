@@ -14,6 +14,13 @@ class Book
 
 }
 
+const TOTAL_SHELFS = 10;
+
+const BOOKS_PER_SHELF = 5;
+
+const KEYWORDS = ["random", "pink", "europe", "japanese", "birds", "six", "numbers", "design", "world", "salt"];
+
+
 // First book on each shelf
 function* leaderBook(limit)
 {
@@ -71,10 +78,7 @@ function shelfWeight(index)
 
 function fecthRandomData(bookcase)
 {
-    let key = "AIzaSyDMRcwB5mMSBsKzHxNU90BgVrimUtD_09U";
-
-    let url = `https://www.googleapis.com/books/v1/volumes?q=random&key=${key}`;
-
+    let key = "YOUR_API_KEY";
 
     if("YOUR_API_KEY" === key)
     {
@@ -82,36 +86,52 @@ function fecthRandomData(bookcase)
         return;
     }
 
-    fetch(url)
-        .then( response => response.json())
-        .then(
+    for(let i = 0; i < TOTAL_SHELFS; ++i)
+    {
 
-        data =>
-            {
-                if(data.items && data.length == 0)
+        let url = `https://www.googleapis.com/books/v1/volumes?q=${KEYWORDS[i]}&key=${key}`;
+
+        fetch(url)
+            .then( response => response.json())
+            .then(
+
+            data =>
                 {
-                    plotter.error("No Internet or no books");
-                    return;
-                }
+                    // Error => No value returned
+                    if(data.items && data.length == 0)
+                    {
+                        plotter.error("No Internet or no books");
+                        return;
+                    }
 
 
-                for(let i = 0; i < data.items.length; ++i)
+                    if(data.items && data.length < BOOKS_PER_SHELF)
+                        plotter.warn(`There's no enough books about: ${KEYWORDS[i]}`);
 
-                {
-                    let book = new Book(data.items[i].volumeInfo.title, 'CO');
+                    let bookShelf = [];
 
-                    bookcase.push(book);
-                }
-            }
-    );
 
+                    for(let j = 0; j < BOOKS_PER_SHELF; ++j)
+                    {
+                        let book = new Book(data.items[j].volumeInfo.title, 'CO');
+
+                        book.ISBN = data.items[j].volumeInfo.industryIdentifiers;
+
+                        bookShelf.push(book);
+                    }
+
+                    bookcase.push(bookShelf);
+                });
+    }
+
+    console.log(bookcase);
 }
 
 // Array of arrays of books
 
 let bookcase = [];
 
-fecthRandomData();
+fecthRandomData(bookcase);
 
 function setup()
 {
