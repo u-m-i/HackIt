@@ -1,3 +1,10 @@
+class Plotter
+{
+    constructor()
+    {
+    }
+}
+
 class Book 
 {
     /** Properties **/
@@ -19,6 +26,9 @@ const TOTAL_SHELFS = 10;
 const BOOKS_PER_SHELF = 5;
 
 const KEYWORDS = ["random", "pink", "europe", "japanese", "birds", "six", "numbers", "design", "world", "salt"];
+
+
+const plotter = new Plotter();
 
 
 // First book on each shelf
@@ -73,6 +83,30 @@ function shelfWeight(index)
 //
 //
 // Book's name as a parameter to get the location of the book.
+function bookByName(name)
+{
+    // Lock for a kerword in the name
+    for(let i = 0; i < KEYWORDS.length; ++i)
+    {
+        // TODO => No case sensitive check
+        // The name is related with the keyword
+        if(name.contains(KEYWORDS[i]))
+        {
+            let shelf = bookcase[i];
+
+            // Start searching in the bookshelf
+            for(let j = 0; j < shelf.length; ++j)
+            {
+                // We have found the book
+                if(shelf[j].title === name)
+                    return shelf[j];
+
+            }
+        }
+    }
+
+    plotter.notfound("Your book has not been found check the information again");
+}
 
 // Additional code
 
