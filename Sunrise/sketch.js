@@ -59,6 +59,7 @@ function draw()
 	//TASK: update the values for the moons brightness, the sun's position and the darkness.
 	//You can either map this to the mouse's location (i.e. the futher left the mouse is the more daylight) or you can just change the values gradually over time.
 
+    sun.y = map(mouseX, 0,width,0,height);
 
 	//draw the sky
 	background(150, 200, 255);
