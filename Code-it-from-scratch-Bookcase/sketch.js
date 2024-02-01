@@ -72,7 +72,11 @@ function totalBooksStore()
     return total;
 }
 
-// All the books at a shelf
+/**
+ * 
+ * @param {Int} index 
+ * @returns The length of the shelf:Array
+ */
 function shelfWeight(index)
 {
     return bookcase[index-1].length;
@@ -112,11 +116,12 @@ function bookByName(name)
 
 function fecthRandomData(bookcase)
 {
-    let key = "YOUR_API_KEY";
+    let key = "AIzaSyBKyKvybNOzGh6NF6FwsVv0bYiwmuWKwJ4";
 
     if("YOUR_API_KEY" === key)
     {
         console.warn("The API key is not assigned, the information can not be fetch");
+        // Plotter warn
         return;
     }
 
@@ -154,22 +159,42 @@ function fecthRandomData(bookcase)
                         bookShelf.push(book);
                     }
 
-                    bookcase.push(bookShelf);
+                    bookcase[i] = bookShelf;
                 });
     }
-
-    console.log(bookcase);
 }
 
-// Array of arrays of books
-
-let bookcase = [];
+let bookcase = [10];
 
 fecthRandomData(bookcase);
 
 function setup()
 {
 	createCanvas(800, 600);
+
+    background(40,40,40);
+
+    console.log(bookcase.length);
+
+    fill(1);
+    textSize(25);
+
+    for(let i = 0;i < bookcase.length; ++i)
+    {
+        console.log(i);
+    }
+
+    for(let j = 0; j < bookcase.length; ++j)
+    {
+        console.log(j);
+
+        for(let i = 0; i < bookcase[0].length; ++i)
+        {
+            console.log(bookcase[j][i]);
+
+            text(bookcase[j][i].name,width/2 , height/2 + (40 * i));
+        }
+    }
 }
 
 function draw()
