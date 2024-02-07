@@ -1,7 +1,27 @@
+import * as myp5 from "./p5.min.js";
+
+console.log(new myp5());
+
 class Plotter
 {
     constructor()
     {
+    }
+
+    warn()
+    {
+
+    }
+
+    exception()
+    {
+
+    }
+
+
+    error()
+    {
+
     }
 }
 
@@ -21,14 +41,6 @@ class Book
 
 }
 
-const TOTAL_SHELFS = 10;
-
-const BOOKS_PER_SHELF = 5;
-
-const KEYWORDS = ["random", "pink", "europe", "japanese", "birds", "six", "numbers", "design", "world", "salt"];
-
-
-const plotter = new Plotter();
 
 
 // First book on each shelf
@@ -42,6 +54,7 @@ function* leaderBook(limit)
         index++;
     }
 }
+
 
 function shelfFirstBook(limit)
 {
@@ -57,8 +70,7 @@ function shelfFirstBook(limit)
     return list;
 }
 
-// Total number of books
-//
+
 function totalBooksStore()
 {
     let total = 0;
@@ -72,6 +84,7 @@ function totalBooksStore()
     return total;
 }
 
+
 /**
  * 
  * @param {Int} index 
@@ -82,11 +95,13 @@ function shelfWeight(index)
     return bookcase[index-1].length;
 }
 
-//
-// The books of particular shelf specified by a parameter ( A name list of all the books in the shelf)
-//
-//
-// Book's name as a parameter to get the location of the book.
+
+
+/**
+ * The books of particular shelf specified by a parameter ( A name list of all the books in the shelf)
+ * @param {String} name as the key to get the location of the book
+ * @returns 
+ */
 function bookByName(name)
 {
     // Lock for a kerword in the name
@@ -109,64 +124,21 @@ function bookByName(name)
         }
     }
 
-    plotter.notfound("Your book has not been found check the information again");
+    plotter.exception("Your book has not been found check the information again");
 }
 
-// Additional code
+const TOTAL_SHELFS = 10;
 
-function fecthRandomData(bookcase)
-{
-    let key = "AIzaSyBKyKvybNOzGh6NF6FwsVv0bYiwmuWKwJ4";
+const BOOKS_PER_SHELF = 5;
 
-    if("YOUR_API_KEY" === key)
-    {
-        console.warn("The API key is not assigned, the information can not be fetch");
-        // Plotter warn
-        return;
-    }
+const DEFAULT_KEY = "YOUR_API_KEY";
 
-    for(let i = 0; i < TOTAL_SHELFS; ++i)
-    {
+const KEYWORDS = ["random", "pink", "europe", "japanese", "birds", "six", "numbers", "design", "world", "salt"];
 
-        let url = `https://www.googleapis.com/books/v1/volumes?q=${KEYWORDS[i]}&key=${key}`;
+const plotter = new Plotter();
 
-        fetch(url)
-            .then( response => response.json())
-            .then(
+let bookcase = [];
 
-            data =>
-                {
-                    // Error => No value returned
-                    if(data.items && data.length == 0)
-                    {
-                        plotter.error("No Internet or no books");
-                        return;
-                    }
-
-
-                    if(data.items && data.length < BOOKS_PER_SHELF)
-                        plotter.warn(`There's no enough books about: ${KEYWORDS[i]}`);
-
-                    let bookShelf = [];
-
-
-                    for(let j = 0; j < BOOKS_PER_SHELF; ++j)
-                    {
-                        let book = new Book(data.items[j].volumeInfo.title, 'CO');
-
-                        book.ISBN = data.items[j].volumeInfo.industryIdentifiers;
-
-                        bookShelf.push(book);
-                    }
-
-                    bookcase[i] = bookShelf;
-                });
-    }
-}
-
-let bookcase = [10];
-
-fecthRandomData(bookcase);
 
 function setup()
 {
@@ -179,10 +151,6 @@ function setup()
     fill(1);
     textSize(25);
 
-    for(let i = 0;i < bookcase.length; ++i)
-    {
-        console.log(i);
-    }
 
     for(let j = 0; j < bookcase.length; ++j)
     {
@@ -201,3 +169,30 @@ function draw()
 {
 
 }
+
+
+async function start()
+{
+
+    // Populate the bookcase first
+
+    let fetcher = await import("./fetcher.js");
+
+    await fetcher.fecthRandomData(bookcase, TOTAL_SHELFS, BOOKS_PER_SHELF, KEYWORDS, plotter);
+
+    // Import p5 and settle it down
+
+    let myp5 = await import("./p5.min.js");
+
+    let engine = new myp5.p5((sketch) =>
+    {
+
+        sketch.setup = setup;
+
+        sketch.draw = draw;
+
+    });
+
+}
+
+start();
