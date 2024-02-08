@@ -1,6 +1,3 @@
-import * as myp5 from "./p5.min.js";
-
-console.log(new myp5());
 
 class Plotter
 {
@@ -23,22 +20,6 @@ class Plotter
     {
 
     }
-}
-
-class Book 
-{
-    /** Properties **/
-
-    location;
-    name;
-    ISBN;
-
-    constructor(name, location)
-    {
-        this.name = name;
-        this.location = location;
-    }
-
 }
 
 
@@ -131,7 +112,8 @@ const TOTAL_SHELFS = 10;
 
 const BOOKS_PER_SHELF = 5;
 
-const DEFAULT_KEY = "YOUR_API_KEY";
+// Remeber to erase your key
+const DEFAULT_KEY = "AIzaSyDDLgWqXTAqb_zUKVKglcpi6-UPaVwc4xc";
 
 const KEYWORDS = ["random", "pink", "europe", "japanese", "birds", "six", "numbers", "design", "world", "salt"];
 
@@ -139,60 +121,48 @@ const plotter = new Plotter();
 
 let bookcase = [];
 
+async function start()
+{
+    // Populate the bookcase first
+
+    let fetcher = await import("./fetcher.js");
+
+    await fetcher.fecthRandomData(bookcase, TOTAL_SHELFS, BOOKS_PER_SHELF, KEYWORDS, DEFAULT_KEY, plotter);
+
+    console.log(bookcase);
+
+}
+
+
+start();
+
+// p5 global declarations
 
 function setup()
 {
 	createCanvas(800, 600);
 
-    background(40,40,40);
-
-    console.log(bookcase.length);
-
-    fill(1);
-    textSize(25);
-
-
-    for(let j = 0; j < bookcase.length; ++j)
-    {
-        console.log(j);
-
-        for(let i = 0; i < bookcase[0].length; ++i)
-        {
-            console.log(bookcase[j][i]);
-
-            text(bookcase[j][i].name,width/2 , height/2 + (40 * i));
-        }
-    }
 }
 
 function draw()
 {
 
-}
+    if(bookcase.length === 0)
+        return;
 
 
-async function start()
-{
+    clear();
+    background(40,40,40);
 
-    // Populate the bookcase first
+    fill(1);
+    textSize(25);
 
-    let fetcher = await import("./fetcher.js");
 
-    await fetcher.fecthRandomData(bookcase, TOTAL_SHELFS, BOOKS_PER_SHELF, KEYWORDS, plotter);
-
-    // Import p5 and settle it down
-
-    let myp5 = await import("./p5.min.js");
-
-    let engine = new myp5.p5((sketch) =>
+    for(let i = 0; i < bookcase.length; ++i)
     {
-
-        sketch.setup = setup;
-
-        sketch.draw = draw;
-
-    });
-
+        for(let j = 0; j < bookcase[i].length; ++j)
+        {
+            text(bookcase[j][i].name, 30 * i , height/2 + (10 * j));
+        }
+    }
 }
-
-start();

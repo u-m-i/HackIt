@@ -1,4 +1,19 @@
 
+class Book 
+{
+    /** Properties **/
+   location;
+   name;
+   ISBN;
+
+   constructor(name, location)
+   {
+      this.name = name;
+      this.location = location;
+   }
+
+}
+
 /**
  * 
  * @param {Array} bookcase 
@@ -26,36 +41,30 @@ export async function fecthRandomData(bookcase, shelfQuantity, bookPerShelf, key
 
       let url = `https://www.googleapis.com/books/v1/volumes?q=${keywords[i]}&key=${key}`;
 
-      fetch(url)
-         .then( response => response.json())
-         .then(
+      let shelfData = await fetch(url).then( response => response.json());
 
-         data =>
-            {
-                  // Error => No value returned
-                  if(data.items && data.length == 0)
-                  {
-                     plotter.error("No Internet or no books");
-                     return;
-                  }
+      // Error => No value returned
+      if(shelfData.items && shelfData.length == 0)
+      {
+         plotter.error("No Internet or no books");
+         return;
+      }
 
+      // Exception => There's not enough data to fill the books per shelf
+      if(shelfData.items && shelfData.length < bookPerShelf)
+         plotter.exception(`There's no enough books about: ${KEYWORDS[i]}`);
 
-                  // Exception => There's not enough data to fill the books per shelf
-                  if(data.items && data.length < bookPerShelf)
-                     plotter.exception(`There's no enough books about: ${KEYWORDS[i]}`);
+      let bookShelf = [];
 
-                  let bookShelf = [];
+      for(let j = 0; j < bookPerShelf; ++j)
+      {
+         let book = new Book(shelfData.items[j].volumeInfo.title, 'CO');
 
-                  for(let j = 0; j < bookPerShelf; ++j)
-                  {
-                     let book = new Book(data.items[j].volumeInfo.title, 'CO');
+         book.ISBN = shelfData.items[j].volumeInfo.industryIdentifiers;
 
-                     book.ISBN = data.items[j].volumeInfo.industryIdentifiers;
+         bookShelf.push(book);
+      }
 
-                     bookShelf.push(book);
-                  }
-
-                  bookcase[i] = bookShelf;
-            });
+      bookcase[i] = bookShelf;
    }
 }
