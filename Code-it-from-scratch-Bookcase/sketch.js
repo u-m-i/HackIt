@@ -1,4 +1,3 @@
-
 class Plotter
 {
     constructor()
@@ -113,7 +112,7 @@ const TOTAL_SHELFS = 10;
 const BOOKS_PER_SHELF = 5;
 
 // Remeber to erase your key
-const DEFAULT_KEY = "AIzaSyDDLgWqXTAqb_zUKVKglcpi6-UPaVwc4xc";
+const DEFAULT_KEY = "DEFAULT_API_KEY";
 
 const KEYWORDS = ["random", "pink", "europe", "japanese", "birds", "six", "numbers", "design", "world", "salt"];
 
