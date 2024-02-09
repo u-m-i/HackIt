@@ -139,7 +139,7 @@ start();
 
 function setup()
 {
-	createCanvas(800, 600);
+	createCanvas(1800, 600);
 
 }
 
@@ -154,14 +154,14 @@ function draw()
     background(40,40,40);
 
     fill(1);
-    textSize(25);
+    textSize(15);
 
 
     for(let i = 0; i < bookcase.length; ++i)
     {
         for(let j = 0; j < bookcase[i].length; ++j)
         {
-            text(bookcase[j][i].name, 30 * i , height/2 + (10 * j));
+            text(bookcase[i][j].name, 30 + (330 * i) , 140 + (80 * j));
         }
     }
 }
