@@ -6,9 +6,8 @@ class Rocket
    #transform;
    #velocity;
 
-   #additionX = 0;
-   #additionY = 0;
 
+   #state = "";
    #thrust = false;
 
    static direction = 
@@ -32,6 +31,9 @@ class Rocket
 
    dawRocket()
    {
+      if(state === "")
+         return;
+
       fill(180);
       beginShape();
 
@@ -91,14 +93,59 @@ function setup()
 
 function draw()
 {
-   rocket.dawRocket();
+   //rocket.dawRocket();
 }
 
+/// TODO => Map 
+// Receive an input, let's say a string.
+// If the input happens to be included into an object set, then call what is configured for that object
+let keyMap =
+{
+   "A" : function()
+   {
+      return "Left";
+   },
+
+   "D" : function()
+   {
+      return "Right";
+   },
+};
+
+
+let vertexMap = 
+{
+   "Left": function ()
+   {
+      return {x:-1};
+   },
+
+   "Right": function ()
+   {
+      return {x:1};
+   }
+};
+
+
+let keys = Object.getOwnPropertyNames(keyMap);
+
+let directions = Object.getOwnPropertyNames(vertexMap);
 
 function keyPressed()
 {
    if(!rocket)
       return;
+
+   let direction = keys.find(direction => direction === key);
+
+   if(direction)
+   {
+      let result = keyMap[direction]();
+
+      let vector = vertexMap[result]();
+
+   }
+
 
    if(key === Rocket.direction.Left)
    {
@@ -112,7 +159,7 @@ function keyPressed()
 }
 
 
-/// TODO => Map 
+
 function keyReleased()
 {
    if(!rocket)
