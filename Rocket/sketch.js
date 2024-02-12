@@ -3,11 +3,11 @@ class Rocket
    #x = 0 ;
    #y = 0 ;
 
+
    #transform;
    #velocity;
 
 
-   #state = "";
    #thrust = false;
 
    static direction = 
@@ -29,6 +29,7 @@ class Rocket
    }
 
 
+   // How to do debouncing?
    dawRocket()
    {
       if(state === "")
@@ -144,17 +145,7 @@ function keyPressed()
 
       let vector = vertexMap[result]();
 
-   }
-
-
-   if(key === Rocket.direction.Left)
-   {
-      rocket.setRight(true);
-   }
-
-   if(key === Rocket.direction.Right)
-   {
-      rocket.setLeft(true);
+      rocket.addVel(vector);
    }
 }
 
@@ -165,13 +156,10 @@ function keyReleased()
    if(!rocket)
       return;
 
-   if(key === Rocket.direction.Left)
-   {
-      rocket.setLeft(false);
-   }
+   let direction = keys.find(direction => direction === key);
 
-   if(key === Rocket.direction.Right)
+   if(direction)
    {
-      rocket.setRight(false);
+      
    }
 }
