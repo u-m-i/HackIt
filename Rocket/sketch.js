@@ -3,18 +3,11 @@ class Rocket
    #x = 0 ;
    #y = 0 ;
 
-
    #transform;
    #velocity;
 
 
    #thrust = false;
-
-   static direction = 
-   {
-      Right: "D",
-      Left: "A",
-   }
 
    constructor(x,y)
    {
@@ -28,13 +21,18 @@ class Rocket
    {
    }
 
+   sumVel(vector)
+   {
 
-   // How to do debouncing?
+   }
+
+   substractVel(vector)
+   {
+
+   }
+
    dawRocket()
    {
-      if(state === "")
-         return;
-
       fill(180);
       beginShape();
 
@@ -83,19 +81,6 @@ class Rocket
 
 let rocket;
 
-function setup()
-{
-   createCanvas(800,600);
-   background(40);
-
-   rocket = new Rocket((width/2), (height - 100));
-}
-
-
-function draw()
-{
-   //rocket.dawRocket();
-}
 
 /// TODO => Map 
 // Receive an input, let's say a string.
@@ -127,28 +112,37 @@ let vertexMap =
    }
 };
 
+function setup()
+{
+   createCanvas(800,600);
+   background(40);
 
-let keys = Object.getOwnPropertyNames(keyMap);
+   rocket = new Rocket((width/2), (height - 100));
+}
 
-let directions = Object.getOwnPropertyNames(vertexMap);
+
+function draw()
+{
+   rocket.dawRocket();
+}
 
 function keyPressed()
 {
    if(!rocket)
       return;
 
-   let direction = keys.find(direction => direction === key);
 
-   if(direction)
+   if(keyMap[key] !== undefined)
    {
-      let result = keyMap[direction]();
+      console.log(`The key ${key} was pressed`);
+
+      let result = keyMap[key]();
 
       let vector = vertexMap[result]();
 
-      rocket.addVel(vector);
+      rocket.sumVel(vector);
    }
 }
-
 
 
 function keyReleased()
@@ -156,10 +150,12 @@ function keyReleased()
    if(!rocket)
       return;
 
-   let direction = keys.find(direction => direction === key);
-
-   if(direction)
+   if(keyMap[key] !== undefined)
    {
-      
+      let result = keyMap[key]();
+
+      let vector = vertexMap[result]();
+
+      rocket.substractVel(vector);
    }
 }
