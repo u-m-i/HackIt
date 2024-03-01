@@ -5,15 +5,20 @@ class Rocket
 
    #transform;
    #velocity;
+   #multiplier;
 
 
    #thrust = false;
 
-   constructor(x,y)
+   constructor(x,y, mult)
    {
-      this.#transform = createVector(x,y,0);
+       this.#x = x;
+       this.#y = y;
+       this.#multiplier = mult;
 
-      this.#velocity = createVector(0,0,0);
+      this.#transform = createVector(x,y);
+
+      this.#velocity = createVector(0,0);
    }
 
 
@@ -21,14 +26,15 @@ class Rocket
    {
    }
 
-   sumVel(vector)
+   addToVel(vector)
    {
-
+      this.#velocity.add(vector);
+       this.#velocity.mult(this.#multiplier);
    }
 
-   substractVel(vector)
+   subToVel(vector)
    {
-
+      this.#velocity.sub(vector);
    }
 
    dawRocket()
@@ -38,28 +44,28 @@ class Rocket
 
       this.#transform.add(this.#velocity);
 
-      vertex(this.#transform.x + 10, this.#y + 60);
-      vertex(this.#x + 10, this.#y + 20);
-      vertex(this.#x + 15, this.#y);
-      vertex(this.#x + 20, this.#y + 20);
-      vertex(this.#x + 20, this.#y + 60);
+      vertex(this.#transform.x + 10, this.#transform.y + 60);
+      vertex(this.#transform.x + 10, this.#transform.y + 20);
+      vertex(this.#transform.x + 15, this.#transform.y);
+      vertex(this.#transform.x + 20, this.#transform.y + 20);
+      vertex(this.#transform.x + 20, this.#transform.y + 60);
       // 
       endShape(CLOSE);
 
       fill(255, 0, 0);
       beginShape();
 
-      vertex(this.#x, this.#y + 60);
-      vertex(this.#x + 10, this.#y + 40);
-      vertex(this.#x + 10, this.#y + 60);
+      vertex(this.#transform.x, this.#transform.y + 60);
+      vertex(this.#transform.x + 10, this.#transform.y + 40);
+      vertex(this.#transform.x + 10, this.#transform.y + 60);
       //
       endShape(CLOSE);
 
       beginShape();
 
-      vertex(this.#x + 30, this.#y + 60);
-      vertex(this.#x + 20, this.#y + 40);
-      vertex(this.#x + 20, this.#y + 60);
+      vertex(this.#transform.x + 30, this.#transform.y + 60);
+      vertex(this.#transform.x + 20, this.#transform.y + 40);
+      vertex(this.#transform.x + 20, this.#transform.y + 60);
       //
       endShape(CLOSE);
 
@@ -68,11 +74,11 @@ class Rocket
          fill(255, 150, 0);
          beginShape();
 
-         vertex(this.#x + 10, this.#y + 60);
-         vertex(this.#x + 13, this.#y + 80);
-         vertex(this.#x + 15, this.#y + 70);
-         vertex(this.#x + 18, this.#y + 80);
-         vertex(this.#x + 20, this.#y + 60);
+         vertex(this.#transform.x + 10, this.#transform.y + 60);
+         vertex(this.#transform.x + 13, this.#transform.y + 80);
+         vertex(this.#transform.x + 15, this.#transform.y + 70);
+         vertex(this.#transform.x + 18, this.#transform.y + 80);
+         vertex(this.#transform.x + 20, this.#transform.y + 60);
          //
          endShape(CLOSE);
       }
@@ -103,12 +109,12 @@ let vertexMap =
 {
    "Left": function ()
    {
-      return {x:-1};
+      return createVector(-1, 0);
    },
 
    "Right": function ()
    {
-      return {x:1};
+      return createVector(1, 0);
    }
 };
 
@@ -117,12 +123,13 @@ function setup()
    createCanvas(800,600);
    background(40);
 
-   rocket = new Rocket((width/2), (height - 100));
+   rocket = new Rocket((width/2), (height - 100), 2);
 }
 
 
 function draw()
 {
+    clear(40,40,40);
    rocket.dawRocket();
 }
 
@@ -140,7 +147,7 @@ function keyPressed()
 
       let vector = vertexMap[result]();
 
-      rocket.sumVel(vector);
+      rocket.addToVel(vector);
    }
 }
 
@@ -156,6 +163,6 @@ function keyReleased()
 
       let vector = vertexMap[result]();
 
-      rocket.substractVel(vector);
+      rocket.subToVel(vector);
    }
 }
