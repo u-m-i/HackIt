@@ -28,13 +28,20 @@ class Rocket
 
    addToVel(vector)
    {
-      this.#velocity.add(vector);
-       this.#velocity.mult(this.#multiplier);
+      let amplification = p5.Vector.mult(vector, this.#multiplier);
+      this.#velocity.add(amplification);
    }
 
    subToVel(vector)
    {
-      this.#velocity.sub(vector);
+      if(vector.x < 0 || vector.y < 0)
+      {
+         this.#velocity.add(vector.mult(this.#multiplier));
+      }
+      else
+      {
+         this.#velocity.sub(vector.mult(this.#multiplier));
+      }
    }
 
    dawRocket()
